@@ -274,7 +274,37 @@ suite('repeat', () => {
       assert.strictEqual(children1[2], children2[1]);
     });
 
+    test('can re-insert items after removal', () => {
+      const t = (items: number[]) => html`<ul>
+          ${repeat(items, (i) => i, (i: number) => html`<li>item: ${i}</li>
+          `)}</ul>`;
+
+      render(t([1, 2, 3]), container);
+
+      assert.equal(
+          container.innerHTML, `<ul>
+          <li>item: 1<!----></li>
+          <li>item: 2<!----></li>
+          <li>item: 3<!----></li>
+          <!----></ul>`);
+
+      render(t([]), container);
+
+      assert.equal(
+        container.innerHTML, `<ul>
+          <!----></ul>`);
+
+      render(t([1, 2, 3]), container);
+
+      assert.equal(
+          container.innerHTML, `<ul>
+          <li>item: 1<!----></li>
+          <li>item: 2<!----></li>
+          <li>item: 3<!----></li>
+          <!----></ul>`);
+    });
   });
+
 
   suite('un-keyed', () => {
 
